@@ -20,7 +20,6 @@ module Automatiek
         @download = lambda do |version|
           Dir.chdir File.dirname(vendor_lib) do
             `curl -L #{github}/archive/#{version}.tar.gz | tar -xz`
-            puts `ls`
             unless $?.success?
               raise "Downloading & untarring #{gem_name} (#{version}) failed"
             end
