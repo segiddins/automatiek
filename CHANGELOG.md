@@ -1,3 +1,11 @@
+## 0.1.1
+
+##### Bug Fixes
+
+* Removed errant debug log statement.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+
 ## 0.1.0
 
 ##### Enhancements
