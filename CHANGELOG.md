@@ -1,3 +1,11 @@
+## Master
+
+##### Enhancements
+
+* Add support for Rake 11.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+
 ## 0.1.1
 
 ##### Bug Fixes
