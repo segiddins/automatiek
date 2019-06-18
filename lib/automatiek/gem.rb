@@ -43,11 +43,17 @@ module Automatiek
       Dir.glob("#{vendor_lib}/**/*.rb")
     end
 
+    def require_entrypoint
+      @require_entrypoint ||= gem_name.tr("-", "/")
+    end
+
+    attr_writer :require_entrypoint
+
     def namespace_files
       require_target = vendor_lib.sub(%r{^(.+?/)?lib/}, "") << "/lib"
       process_files(namespace, "#{prefix}::#{namespace}")
-      process_files(/require (["'])#{Regexp.escape gem_name}/, "require \\1#{require_target}/#{gem_name}")
-      process_files(/(autoload\s+[:\w]+,\s+["'])(#{Regexp.escape gem_name}[\w\/]+["'])/, "\\1#{require_target}/\\2")
+      process_files(/require (["'])#{Regexp.escape require_entrypoint}/, "require \\1#{require_target}/#{require_entrypoint}")
+      process_files(/(autoload\s+[:\w]+,\s+["'])(#{Regexp.escape require_entrypoint}[\w\/]+["'])/, "\\1#{require_target}/\\2")
     end
 
     def clean
