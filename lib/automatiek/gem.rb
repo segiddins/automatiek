@@ -44,8 +44,10 @@ module Automatiek
     end
 
     def require_entrypoint
-      gem_name.tr("-", "/")
+      @require_entrypoint ||= gem_name.tr("-", "/")
     end
+
+    attr_writer :require_entrypoint
 
     def namespace_files
       require_target = vendor_lib.sub(%r{^(.+?/)?lib/}, "") << "/lib"
