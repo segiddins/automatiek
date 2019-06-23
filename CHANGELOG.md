@@ -1,8 +1,10 @@
-## Master
+## 0.2.0 (2019-06-22)
 
 ##### Enhancements
 
-* None.  
+* Add support for inferred require entrypoints.  
+  [David Rodríguez](https://github.com/deivid-rodriguez)
+
 
 ##### Bug Fixes
 
