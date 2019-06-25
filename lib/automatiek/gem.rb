@@ -4,12 +4,20 @@ module Automatiek
   class Gem
     def initialize(gem_name, &block)
       @gem_name = gem_name
+      @dependencies = []
       block.call(self) if block
     end
 
-    def vendor!(version)
-      update(version)
-      namespace_files
+    def vendor!(version = nil)
+      update(version || self.version)
+
+      @dependencies.each do |dependency|
+        dependency.vendor!
+        dependency.namespace_files(vendor_lib)
+      end
+
+      namespace_files(vendor_lib)
+
       clean
     end
 
@@ -29,18 +37,20 @@ module Automatiek
       end
     end
 
+    def dependency(name, &block)
+      dep = self.class.new(name, &block)
+      @dependencies << dep
+    end
+
     attr_accessor :gem_name
     attr_accessor :namespace
     attr_accessor :prefix
     attr_accessor :vendor_lib
+    attr_accessor :version
 
     def update(version)
       FileUtils.rm_rf vendor_lib
       @download.call(version)
-    end
-
-    def files
-      Dir.glob("#{vendor_lib}/**/*.rb")
     end
 
     def require_entrypoint
@@ -49,11 +59,12 @@ module Automatiek
 
     attr_writer :require_entrypoint
 
-    def namespace_files
+    def namespace_files(folder)
+      files = Dir.glob("#{folder}/**/*.rb")
       require_target = vendor_lib.sub(%r{^(.+?/)?lib/}, "") << "/lib"
-      process_files(namespace, "#{prefix}::#{namespace}")
-      process_files(/require (["'])#{Regexp.escape require_entrypoint}/, "require \\1#{require_target}/#{require_entrypoint}")
-      process_files(/(autoload\s+[:\w]+,\s+["'])(#{Regexp.escape require_entrypoint}[\w\/]+["'])/, "\\1#{require_target}/\\2")
+      process(files, namespace, "#{prefix}::#{namespace}")
+      process(files, /require (["'])#{Regexp.escape require_entrypoint}/, "require \\1#{require_target}/#{require_entrypoint}")
+      process(files, /(autoload\s+[:\w]+,\s+["'])(#{Regexp.escape require_entrypoint}[\w\/]+["'])/, "\\1#{require_target}/\\2")
     end
 
     def clean
@@ -63,7 +74,7 @@ module Automatiek
 
     private
 
-    def process_files(regex, replacement = "")
+    def process(files, regex, replacement = "")
       files.each do |file|
         contents = File.read(file)
         contents.gsub!(regex, replacement)
