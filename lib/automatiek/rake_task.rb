@@ -1,7 +1,7 @@
 require 'rake'
 require 'rake/tasklib'
 
-require 'automatiek/gem'
+require_relative 'gem'
 
 module Automatiek
   class RakeTask < Rake::TaskLib
