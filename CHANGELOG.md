@@ -1,3 +1,15 @@
+## 0.3.0 (2019-09-03)
+
+##### Breaking Changes
+
+* Require Ruby 2.3+
+
+##### Enhancements
+
+* Add support for sub-dependency vendoring.  
+  [David Rodriguez](https://github.com/deivid-rodriguez)
+
+
 ## 0.2.0 (2019-06-22)
 
 ##### Enhancements
