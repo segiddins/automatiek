@@ -62,7 +62,8 @@ module Automatiek
     def namespace_files(folder)
       files = Dir.glob("#{folder}/**/*.rb")
       require_target = vendor_lib.sub(%r{^(.+?/)?lib/}, "") << "/lib"
-      process(files, /(?<!\w|def )#{namespace}\b/, "#{prefix}::#{namespace}")
+      process(files, /::#{namespace}/, "::#{prefix}::#{namespace}")
+      process(files, /(?<!\w|def |:)#{namespace}\b/, "#{prefix}::#{namespace}")
       process(files, /require (["'])#{Regexp.escape require_entrypoint}/, "require \\1#{require_target}/#{require_entrypoint}")
       process(files, /(autoload\s+[:\w]+,\s+["'])(#{Regexp.escape require_entrypoint}[\w\/]+["'])/, "\\1#{require_target}/\\2")
     end
