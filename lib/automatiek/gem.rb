@@ -65,6 +65,7 @@ module Automatiek
 
     def namespace_files(folder)
       files = Dir.glob("#{folder}/**/*.rb")
+      process(files, /module Kernel/, "module #{prefix}")
       process(files, /::#{namespace}/, "::#{prefix}::#{namespace}")
       process(files, /(?<!\w|def |:)#{namespace}\b/, "#{prefix}::#{namespace}")
       process(files, /require (["'])#{Regexp.escape require_entrypoint}/, "require \\1#{require_target}/#{require_entrypoint}")
