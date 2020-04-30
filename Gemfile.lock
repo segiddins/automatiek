@@ -27,7 +27,6 @@ PLATFORMS
 
 DEPENDENCIES
   automatiek!
-  bundler (~> 1.10)
   rake (>= 10.0, < 12.0)
   rspec
 
